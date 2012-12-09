@@ -4,6 +4,7 @@ import 'gamepiece.dart';
 import 'player.dart';
 import 'killer.dart';
 import 'timer.dart';
+import 'graphics.dart';
 
 /////////////////////////////////////////////
 //constants
@@ -57,6 +58,7 @@ const int KEY_KP8 = 104;
 const int KEY_KP6 = 102;
 const int KEY_KP5 = 101;
 
+const int KEY_ENTER = 13;
 
 class Game {
   Map<int, bool> keyStates;
@@ -108,6 +110,7 @@ class Game {
   }
   
   void keyDown(KeyboardEvent event) {
+    //print(event.keyCode);
     keyStates[event.keyCode] = true;
   }
 
@@ -115,80 +118,109 @@ class Game {
     keyStates[event.keyCode] = false;
   }
   
-  void move()
+  void move(double time)
   {
     for (int i = 0; i < killers.length; i ++)
     {
-      killers[i].move();
+      killers[i].move(time);
     }
     for (int i = 0; i < players.length; i ++)
     {
-      players[i].move();
+      players[i].move(time);
     }
   }
 
-  void draw()
+  void draw(time)
   {
     //draw players
     for (int i = 0; i < players.length; i ++)
     {
       if (!players[i].dead)
-        players[i].draw();
+        players[i].draw(time);
     }
 
-      /*
+
     //draw killers
-    for (int i = 0; i < killers.size(); i ++)
+    for (int i = 0; i < killers.length; i ++)
     {
-      killers[i].draw();
+      killers[i].draw(time);
     }
-
-    //game border
-    border(view_port,color(6));
-
+    
     //draw scores
-    for (int i = 0; i < players.size(); i++)
+    for (int i = 0; i < players.length; i++)
     {
-      Graphics::Color color;
-
+      var color;
       //Draw score
-      if (players[i].is_dead())
-        color = players[i].get_color();
+      if (players[i].dead)
+        color = players[i].color;
       else
-        color = Graphics::color(6);
-      draw_number(scores_view_port,0.5,float(i+1)/float(players.size()+1),players[i].get_score(),color);
+        color = 6;
+      DivElement s = document.query("div#player${i}_score");
+      s.text = players[i].score.toString();
+      s.style.color = "#".concat(COLORS[color]);
     }
-
-    //scores border
-    border(scores_view_port,color(6));
-
-    SDL_Flip(screen_surface);
-
-    //redraw background
-    clear();*/
   }
 
+  void spawnKiller()
+  {
+    killerTimer.tick();
 
-  
-  void gameFrame(highResTimer) {
-    move(); //move all the pieces
-
-    /*spawn_killer();
-
-    //increment scores
-    for (int i = 0; i < players.size(); i ++)
+    if (killerTimer.elapsed())
     {
-      if (!players[i].is_dead())
+      if (killers.length > maxKillers)
       {
-        players[i].increment_score();
+        killerTimer.disable();
+      }
+      else
+      {
+        killers.add(new Killer(this));
+      };
+    }
+  }
+  
+  void collisions()
+  {
+    for (int i = 0; i < killers.length; i ++)
+    {
+      double killer_x = killers[i].x; //functionally does not help, but might optimise
+      double killer_y = killers[i].y; //functionally does not help, but might optimise
+      for (int j = 0; j < players.length; j ++)
+      {
+        if (!players[j].dead)
+        {
+          double x_dist = players[j].x - killer_x;
+          if (x_dist > GamePiece.radius) //functionally does not help, but might optimise
+            continue;
+          double y_dist = players[j].y - killer_y;
+          if (y_dist > GamePiece.radius) //functionally does not help, but might optimise
+            continue;
+          double sq_dist = (x_dist * x_dist) + (y_dist * y_dist);
+          if (sq_dist <= 4 * GamePiece.radius * GamePiece.radius)
+          {
+            print ("player ".concat(j.toString()).concat(" has died with score ").concat(players[j].score.toString()).concat(" at position (").concat(players[j].x.toString()).concat(",").concat(players[j].y.toString()).concat(")"));
+            players[j].kill();
+          }
+        }
       }
     }
-
-    collisions(); //detect collisions
-    */
-    
-    draw();
+  }
   
+  void gameFrame(double time) {
+    move(time); //move all the pieces
+
+    spawnKiller();
+
+    //increment scores
+    for (int i = 0; i < players.length; i ++)
+    {
+      if (!players[i].dead)
+      {
+        players[i].incrementScore();
+      }
+    }
+    
+    collisions(); //detect collisions
+    
     /*
     all_dead = true;
     for (int i = 0; i < players.size(); i++)
@@ -207,6 +239,12 @@ class Game {
     }
 
     SDL_framerateDelay(&fps_manager);*/
-    window.requestAnimationFrame(this.gameFrame);
+  }
+  
+  void animate(time) {
+    //print(time);
+    gameFrame(time);
+    draw(time);
+    window.requestAnimationFrame(animate);
   }
 }

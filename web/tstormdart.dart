@@ -5,5 +5,7 @@ import 'gamepiece.dart';
 
 void main() {
   Game g = new Game();
-  window.requestAnimationFrame(g.gameFrame);
+  document.query("#loading").style.display = "none";
+  //window.setInterval(g.gameFrame, MS_PER_FRAME.toInt());
+  window.requestAnimationFrame(g.animate);
 }

@@ -1,6 +1,6 @@
 
 body {
-  background-color: #F8F8F8;
+  background-color: #202040;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
   font-weight: normal;
@@ -8,27 +8,44 @@ body {
   margin: 15px;
 }
 
-p {
-  color: #333;
+div#container {
+  position: fixed;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  
+  clear: both;
 }
 
-div#dummy{
-  padding-top: 100%;
-}
-
-@media screen and (orientation: portrait) {
+/*@media screen and (orientation: portrait) {
   div#game {
     width: 100%;
   }
-}
-
-@media screen and (orientation: landscape) {
-  div#game {
-    width: 40%;
+  div#dummy{
+    padding-top: 100%;
   }
-}
+}*/
 
+div#scores {
+  float: left;
+  width: 10%;
+}
 div#game {
   position: relative;
+  width: 88%;
+  height: 98%;
+  float: right;
+
   background-color: #000;
+}
+
+.box {
+  border: solid;
+  border-width: 4px;;
+  border-color: #0DD;
+}
+
+div {
+  color: #0DD;
 }

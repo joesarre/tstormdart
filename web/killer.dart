@@ -5,15 +5,23 @@ import 'game.dart';
 import 'dart:math';
 
 class Killer extends GamePiece{
+  
   static Random rng = new Random();
+  
+  static const double randomAmount = 1.40; // measured in distance/s^2 - random variation is between -0.5*randomAmount and 0.5*randomAmount
+  
+  static const double pounceAmount = 5.0; // measured in percent/s
+  static const double slowAmount = 0.2; // measured in percent/s
+  
   Killer(Game game) 
       : super(game, 5)
   { 
     dx = dy = 0.0;
   }
 
-  void move()
+  void move(double time)
   {
+    double frameTime = time - lastMovedTime;
     //max_cos is the cos of the angle between the killer's
     //line of movement and the most in-view player
     double max_cos = -1.0;
@@ -39,22 +47,23 @@ class Killer extends GamePiece{
     }
     if (max_cos >= 0.85)
     {
-      dx *= 1.05;
-      dy *= 1.05;
+      // facing a player - POUNCE!
+      applyForceMultiplier(pounceAmount, frameTime);
     }
     else
     {
-      dx *= 0.95;
-      dy *= 0.95;
+      // not facing a player - slow down
+      applyForceMultiplier(slowAmount, frameTime);
     }
-    dx += (rng.nextDouble() - 0.5) * 0.00125;
-    dy += (rng.nextDouble() - 0.5) * 0.00125;
+    double forceX = (rng.nextDouble() - 0.5) * randomAmount;
+    double forceY = (rng.nextDouble() - 0.5) * randomAmount;
+    applyForce(forceX, forceY, frameTime);
 
-    if (dx > 0.0125) dx = 0.0125;
-    if (dy > 0.0125) dy = 0.0125;
-    if (dx < -0.0125) dx = -0.0125;
-    if (dy < -0.0125) dy = -0.0125;
-    super.move();
+    if (dx > GamePiece.maxSpeed) dx = GamePiece.maxSpeed;
+    if (dy > GamePiece.maxSpeed) dy = GamePiece.maxSpeed;
+    if (dx < -GamePiece.maxSpeed) dx = -GamePiece.maxSpeed;
+    if (dy < -GamePiece.maxSpeed) dy = -GamePiece.maxSpeed;
+    super.move(time);
   }
   
 }

@@ -7,14 +7,28 @@
     <link rel="stylesheet" href="tstormdart.css">
   </head>
   <body>
-    <div id="scores">
-      <div id="player0_score">
-        <span class="name">Player 0</span>
-        <span class="score">1234</span>
+    <div id="container">
+      <div id="scores" class="box">
+        <div id="player0_score">
+          <span class="name">Player 0</span>
+          <span class="score">0</span>
+        </div>
+        <div id="player1_score">
+          <span class="name">Player 1</span>
+          <span class="score">0</span>
+        </div>
+        <div id="player2_score">
+          <span class="name">Player 2</span>
+          <span class="score">0</span>
+        </div>
+        <div id="player3_score">
+          <span class="name">Player 3</span>
+          <span class="score">0</span>
+        </div>
       </div>
-    </div>  
-    <div id="game">
-     <div id="dummy"></div>
+      <div id="game" class="box">
+       <div id="loading">Loading...</div>
+      </div>
     </div>
     <script type="application/dart" src="tstormdart.dart"></script>
     <script src="https://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>

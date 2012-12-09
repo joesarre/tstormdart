@@ -8,8 +8,7 @@ class Player extends GamePiece {
   int score;
   bool dead;
   
-  static const double max_speed = 0.0125;
-  static const double accel_amount = 0.0015;
+  static const double accelAmount = 1.65; // measured in distance/s^2
 
   Player(Game game, int color)
       : super (game, color)
@@ -36,20 +35,32 @@ class Player extends GamePiece {
     this.game.keyStates[this.downKey] = false;
   }
 
-  void move()
+  void move(double time)
   {
     if (!dead)
     {
-      if (this.game.keyStates[leftKey]) dx -= accel_amount;
-      if (this.game.keyStates[rightKey]) dx += accel_amount;
-      if (this.game.keyStates[upKey]) dy -= accel_amount;
-      if (this.game.keyStates[downKey]) dy += accel_amount;
-
-      if (dx > max_speed) dx = max_speed;
-      if (dy > max_speed) dy = max_speed;
-      if (dx < -max_speed) dx = -max_speed;
-      if (dy < -max_speed) dy = -max_speed;
-      super.move();
+      double forceX = 0.0, forceY = 0.0;
+      if (this.game.keyStates[leftKey]) forceX = -accelAmount;
+      if (this.game.keyStates[rightKey]) forceX = accelAmount;
+      if (this.game.keyStates[upKey]) forceY = -accelAmount;
+      if (this.game.keyStates[downKey]) forceY = accelAmount;
+      applyForce(forceX, forceY, time - lastMovedTime);
+      if (dx > GamePiece.maxSpeed) dx = GamePiece.maxSpeed;
+      if (dy > GamePiece.maxSpeed) dy = GamePiece.maxSpeed;
+      if (dx < -GamePiece.maxSpeed) dx = -GamePiece.maxSpeed;
+      if (dy < -GamePiece.maxSpeed) dy = -GamePiece.maxSpeed;
+      super.move(time);
     }
+  }
+  
+  void kill()
+  {
+    dead = true;
+    elem.remove();
+  }
+  
+  void incrementScore()
+  {
+    score += 1;
   }
 }
