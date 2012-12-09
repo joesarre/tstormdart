@@ -18,11 +18,13 @@ class GamePiece {
   int color;
   Game game;
   bool moved = false;
-  static const radius = 0.00625; // measured in distance units (screen percent)
+  static const standardRadius = 0.00625; // measured in distance units (screen percent)
+  double radius = standardRadius;
   
   static const double maxSpeed = 0.42; // measured in distance/s
 
-  GamePiece(Game game, int color) {
+
+  GamePiece(Game game, int color, [int zIndex]) {
     this.game = game; 
     this.color = color;
     
@@ -30,7 +32,8 @@ class GamePiece {
     elem.src = image(color);
     this.game.root.nodes.add(elem);
     makeAbsolute(elem);
-    setElementSize(elem, radius, radius);
+    setElementSize(elem, radius * 2.0, radius * 2.0);
+    elem.style.zIndex = zIndex.toString();
     this.x = this.y = this.dx = this.dy = 0.0;
   }
   
@@ -44,7 +47,7 @@ class GamePiece {
     dy *= pow(percentPerSecond, milliseconds / 1000.0);
   }
   
-  void draw(time) {
+  void draw(double time) {
     double calcLDX, calcLDY, calcLDT;
     if (moved) {
       calcLDX = x;
@@ -58,7 +61,7 @@ class GamePiece {
     }
     double drawX = calcLDX + (dx * (time - calcLDT) / 1000.0);
     double drawY = calcLDY + (dy * (time - calcLDT) / 1000.0);
-    setElementPosition(elem, drawX, drawY);
+    setElementPosition(elem, drawX - radius, drawY - radius);
     
     /*print("drawn ${drawX}, ${drawY} at ${time}");
     print("animation velocity ${(drawX - lastDrawnX) * 1000.0 / (time - lastDrawnTime)},${(drawY - lastDrawnY) * 1000.0 / (time - lastDrawnTime)} between ${lastDrawnTime} and ${time}");

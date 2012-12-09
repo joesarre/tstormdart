@@ -18,31 +18,45 @@ div#container {
   clear: both;
 }
 
-/*@media screen and (orientation: portrait) {
-  div#game {
-    width: 100%;
-  }
-  div#dummy{
-    padding-top: 100%;
-  }
-}*/
-
 div#scores {
   float: left;
   width: 10%;
 }
 div#game {
   position: relative;
-  width: 88%;
+  width: 85%;
   height: 98%;
   float: right;
 
-  background-color: #000;
+  //background-color: #000;
+  display: block;
+}
+
+div#loading {
+  text-align: center;
+  font-size: 300%;
+  margin: auto;
+  margin-top: 50px;
+}
+
+@media screen and (orientation: portrait) {
+  div#scores {
+    width: 98%;
+    height: 10%;
+    float: none;
+    clear: both;
+  }
+  div#game {
+    width: 98%;
+    height: 86%;
+    float: none;
+    clear: both;
+  }
 }
 
 .box {
   border: solid;
-  border-width: 4px;;
+  border-width: 4px;
   border-color: #0DD;
 }
 

@@ -5,18 +5,20 @@ import 'game.dart';
 class Player extends GamePiece {
   int leftKey, upKey, rightKey, downKey;
 
-  int score;
-  bool dead;
+  int score = 0;
+  bool dead = false;
   
   static const double accelAmount = 1.65; // measured in distance/s^2
-
+  
+  // death sequence
+  GamePiece killedBy;
+  bool dying = false;
+  double deadTime;
+  static const int deathMilliseconds = 1000;
+  
   Player(Game game, int color)
-      : super (game, color)
-  {
-    dead = false;
-    score = 0;
-  }
-
+      : super (game, color, 1);
+  
   void setKeys(
       leftKey,
       upKey,
@@ -51,16 +53,49 @@ class Player extends GamePiece {
       if (dy < -GamePiece.maxSpeed) dy = -GamePiece.maxSpeed;
       super.move(time);
     }
+    
+    if (dying) {
+      if ((time - deadTime) > deathMilliseconds) {
+        dying = false;
+      }
+      else {
+        this.dx = this.killedBy.dx;
+        this.dy = this.killedBy.dy;
+        
+        applyForce((this.killedBy.x - this.x) * 200.0, (this.killedBy.y - this.y) * 200.0, time - lastMovedTime);
+        
+        print("matching killer location: ${x}, ${y}.  dead: ${dead}");
+        super.move(time);
+      }
+    }
   }
   
-  void kill()
+  void kill(GamePiece killer, double time)
   {
+    killedBy = killer;
+    deadTime = time;
     dead = true;
-    elem.remove();
+    dying = true;
   }
   
-  void incrementScore()
+  void draw(double time) {
+    if (dead && dying) {
+      radius = GamePiece.standardRadius * (deathMilliseconds + deadTime - time) / deathMilliseconds;
+      setElementSize(elem, 2.0 * radius, 2.0 * radius);
+    }
+    
+    if (dead && !dying && elem != null) {
+      elem.remove();
+      elem = null;
+    }
+    
+    if (!dead || dying) {
+      super.draw(time);
+    }
+  }
+  
+  void incrementScore(double time)
   {
-    score += 1;
+    score = (time * 0.03).toInt(); // TODO: handle start delays better
   }
 }
