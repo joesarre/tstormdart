@@ -8,29 +8,22 @@
   </head>
   <body>
     <div id="container">
-      <div id="scores_options" class="box">
-        <div id="scores" class="box">
-          <div id="player0_score">
-            <span class="name">Score:</span>
-            <span class="score">0</span>
-          </div>
+      <div id="scores" class="box">
+        <div id="player0_score">
+          <span class="name">Score:</span>
+          <span class="score">0</span>
         </div>
-        <div id="options" class="box">
-          <input id="mute" type="checkbox" accesskey="m"/><label for="mute"><kbd>m</kbd>ute</label>
-          <button id="restart" accesskey="r"><kbd>r</kbd>estart</button>
-        </div>
-        <div class="clear"></div>
       </div>
       <div id="game" class="box">
        <div id="loading">Loading...</div>
       </div>
     </div>
-    <audio id="soundtrack">
+    <audio>
       <source src="sounds/soundtrack.ogg" type="audio/ogg">
       Your browser does not support the audio element.
     </audio>
     <script type="application/dart" src="tstormdart.dart"></script>
-    <script src="packages/browser/dart.js"></script>
+    <script src="packages/browser/lib/dart.js"></script>
     <!--<script src="js/tstormdart.js"></script>-->
   </body>
 </html>

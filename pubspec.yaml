@@ -1,6 +1,4 @@
-name:  tstormdart
-description:  A sample application
-
-#dependencies:
-#  js: any
-#  unittest: { sdk: unittest }
+name: tstormdart
+description: Teleport Storm
+dependencies:
+  browser: any

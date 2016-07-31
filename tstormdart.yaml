@@ -1,0 +1,16 @@
+handlers:
+- url: /teleportstorm/
+  static_dir: tstormdart/build
+  expiration: "1d"
+
+- url: /teleportstorm/sounds/soundtrack.ogg
+  static_files: tstormdart/web/sounds/soundtrack.ogg
+  upload: tstormdart/web/sounds/soundtrack\.ogg
+  mime_type: audio/ogg
+  expiration: "30d"
+  
+- url: /teleportstorm/sounds/soundtrack.mp3
+  static_files: tstormdart/web/sounds/soundtrack.mp3
+  upload: tstormdart/web/sounds/soundtrack\.mp3
+  mime_type: audio/mpeg
+  expiration: "30d"

@@ -96,9 +96,7 @@ class Killer extends GamePiece{
     super.move(time);
   }
 
-  void draw(double time)
-  {
-    // TODO: use canvas for efficiency
+  void draw(double time){
     for (var elem in elems) {
       elem.style.display = "none";
     }
